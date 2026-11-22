@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: makelsan-shop-db
+    environment:
+      POSTGRES_USER: makelsan
+      POSTGRES_PASSWORD: makelsan_secret
+      POSTGRES_DB: makelsan_shop
+    ports:
+      - "5435:5432"
+    volumes:
+      - makelsan_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U makelsan -d makelsan_shop"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  makelsan_pgdata:

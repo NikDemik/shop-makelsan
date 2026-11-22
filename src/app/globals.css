@@ -1,0 +1,283 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  /* Дисплейный конденсированный шрифт (стиль SQUADRO): заголовки, номера, ghost-слова */
+  --font-display: var(--font-oswald), var(--font-manrope), ui-sans-serif, sans-serif;
+
+  /* Единый контейнер сайта (1440px) — утилита max-w-site */
+  --container-site: 90rem;
+
+  /* brand — графит (тёмные секции, футер, админ-навигация) */
+  --color-brand-950: #0a0e14;
+  --color-brand-900: #10151d;
+  --color-brand-800: #171e29;
+  --color-brand-700: #1f2937;
+  --color-brand-600: #2c3849;
+
+  /* accent — «тёплый» оранжевый (CTA, акценты, бейджи) — совпадает с фирменным
+     цветом оборудования Makelsan (оранжевые корпуса серий Boxer / LevelUPS) */
+  --color-accent-100: #fff0e2;
+  --color-accent-200: #ffd9b3;
+  --color-accent-300: #ffb26e;
+  --color-accent-400: #f28232;
+  --color-accent-500: #e06e1d;
+  --color-accent-600: #b4560e;
+
+  /* живой контраст для второстепенных акцентов (энергия, наличие) */
+  --color-volt-300: #ffd166;
+  --color-volt-400: #ffb020;
+  --color-volt-500: #e8960c;
+
+  --color-paper: #f6f7f9;
+  --color-line: #e3e6ea;
+  --color-ink: #10151c;
+  --color-muted: #626d7b;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.hero-grid {
+  background-image:
+    linear-gradient(rgba(242, 130, 50, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(242, 130, 50, 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+.hero-glow {
+  background: radial-gradient(
+    ellipse 60% 50% at 70% 40%,
+    rgba(242, 130, 50, 0.16),
+    transparent 70%
+  );
+}
+
+/* Диагональная штриховка тёмных секций (мотив SQUADRO) */
+.diag-lines {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.03) 0px,
+    rgba(255, 255, 255, 0.03) 1px,
+    transparent 1px,
+    transparent 16px
+  );
+}
+
+/* Мелкая капс-подпись-eyebrow */
+.label-caps {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* Дисплейный заголовок в стиле SQUADRO: конденсированный uppercase */
+.heading-caps {
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.015em;
+  line-height: 1.02;
+}
+
+/* Крупный номер секции («01», «02») */
+.section-num {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 0.9;
+}
+
+/* «Призрачное» фоновое слово на тёмных секциях */
+.ghost-word {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 0.85;
+  color: rgba(255, 255, 255, 0.05);
+  user-select: none;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* Верстка HTML-контента из API (описания, блоки) */
+.rich-html {
+  line-height: 1.7;
+  color: var(--color-ink);
+}
+.rich-html h2 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 1.6em 0 0.6em;
+}
+.rich-html h2:first-child {
+  margin-top: 0;
+}
+.rich-html p {
+  margin: 0.7em 0;
+}
+.rich-html ul,
+.rich-html ol {
+  margin: 0.7em 0;
+  padding-left: 1.4em;
+}
+.rich-html ul {
+  list-style: disc;
+}
+.rich-html ol {
+  list-style: decimal;
+}
+.rich-html li {
+  margin: 0.35em 0;
+}
+.rich-html img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  margin: 0.8em 0;
+}
+.rich-html b,
+.rich-html strong {
+  font-weight: 700;
+}
+.rich-html table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.8em 0;
+}
+.rich-html td,
+.rich-html th {
+  border: 1px solid var(--color-line);
+  padding: 0.5em 0.75em;
+  text-align: left;
+}
+.rich-html figcaption {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+/* Утилиты старого сайта-источника, на которые завязана вёрстка контента */
+.rich-html .f-center {
+  text-align: center;
+}
+.rich-html .list_circle {
+  list-style: none;
+  padding-left: 0;
+}
+.rich-html .list_circle > li {
+  display: flex;
+  gap: 0.6rem;
+  margin: 0.55em 0;
+}
+.rich-html .list_circleNumber {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 9999px;
+  background: var(--color-accent-400);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* ─── Scroll-reveal (подключение: RevealProvider) ───
+   Скрытие работает только при классе .js на <html> (его ставит инлайновый
+   скрипт до первой отрисовки), поэтому без JS и для роботов контент виден
+   полностью. Варианты: up — текст/карточки, heading — заголовки (wipe),
+   img — изображения. Задержка — data-reveal-delay="N" (мс). */
+.js [data-reveal] {
+  opacity: 0;
+  transition:
+    opacity 0.5s ease-out,
+    transform 0.5s ease-out,
+    clip-path 0.6s ease-out;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.js [data-reveal="up"] {
+  transform: translateY(16px);
+}
+.js [data-reveal="img"] {
+  transform: scale(0.97);
+}
+.js [data-reveal="heading"] {
+  transform: translateY(10px);
+  /* не клипаем до нуля полностью: у IntersectionObserver в Chromium элемент
+     с нулевой видимой площадью не считается пересекающимся и не раскрывается */
+  clip-path: inset(0 calc(100% - 2px) 0 0);
+}
+.js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+/* clip-path после раскрытия оставляем только заголовкам: он создаёт containing
+   block и обрезает fixed-потомков (модальные окна) — у up/img его быть не должно */
+.js [data-reveal="heading"].is-visible {
+  clip-path: inset(0 0 0 0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal],
+  .js [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+    transition: none;
+  }
+}
+
+/* ─── Лайтбокс фото товара ─── */
+@keyframes lightbox-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes lightbox-img-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+.lightbox-overlay {
+  animation: lightbox-in 0.2s ease-out;
+}
+.lightbox-img {
+  animation: lightbox-img-in 0.25s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lightbox-overlay,
+  .lightbox-img {
+    animation: none;
+  }
+}
+
+/* ─── Hero-слайд 03: парящие товары ─── */
+@keyframes hero-float {
+  from { transform: translateY(0); }
+  to { transform: translateY(-10px); }
+}
+.hero-float {
+  animation: hero-float 3.2s ease-in-out infinite alternate;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-float {
+    animation: none;
+  }
+}
+

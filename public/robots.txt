@@ -1,0 +1,27 @@
+# makelsan-ups.ru — robots.txt
+# Служебные разделы закрыты; GET-параметры фильтров склеиваются через Clean-param.
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /account
+Disallow: /checkout
+Disallow: /cart
+Disallow: /login
+Disallow: /register
+Disallow: /api
+
+# Яндекс использует только свою группу — дублируем правила
+User-agent: Yandex
+Allow: /
+Disallow: /admin
+Disallow: /account
+Disallow: /checkout
+Disallow: /cart
+Disallow: /login
+Disallow: /register
+Disallow: /api
+# GET-дубли: /catalog?series=... → /catalog, ?sort/?type/?pmin/?pmax/?priced — фильтры
+Clean-param: sort&type&pmin&pmax&priced&series&power&cat&page
+
+Sitemap: https://makelsan-ups.ru/sitemap.xml

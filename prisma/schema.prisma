@@ -1,0 +1,151 @@
+generator prisma-client-js {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+enum AccountType {
+  B2C
+  B2B
+}
+
+enum OrderType {
+  B2C
+  B2B
+}
+
+enum OrderStatus {
+  NEW
+  CONFIRMED
+  PAID
+  SHIPPED
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id           String      @id @default(cuid())
+  email        String      @unique
+  passwordHash String
+  name         String
+  phone        String?
+  role         Role        @default(CUSTOMER)
+  accountType  AccountType @default(B2C)
+  companyName  String?
+  inn          String?
+  city         String?
+  address      String?
+  createdAt    DateTime    @default(now())
+  orders       Order[]
+}
+
+// Настройки сайта (курс USD, дата синхронизации и т.п.)
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+// Серия ИБП (Юниор, Триатлон, Боксер, ...) — категория из API base.sstmk.ru
+model Series {
+  id              String    @id @default(cuid())
+  apiId           Int       @unique
+  slug            String    @unique
+  name            String
+  tagline         String?
+  description     String?
+  powerMin        Float?
+  powerMax        Float?
+  sortOrder       Int       @default(0)
+  metaTitle       String?
+  metaDescription String?
+  products        Product[]
+
+  @@index([sortOrder])
+}
+
+// Товар — объект из API (ИБП бренда Makelsan)
+model Product {
+  id           String      @id @default(cuid())
+  apiId        Int         @unique
+  slug         String      @unique
+  article      String? // артикул (articul)
+  name         String
+  seriesId     String?
+  series       Series?     @relation(fields: [seriesId], references: [id])
+  type         String? // ibp_type: on-line / line-interactive
+  powerKva     Float? // номинальная мощность, кВА
+  powerKw      Float? // номинальная мощность, кВт
+  phasesIn     Int?
+  phasesOut    Int?
+  priceUsd     Float? // цена в USD из API (null — цена по запросу)
+  priceKopecks Int? // цена в ₽ по курсу (null — по запросу)
+  priceOverrideKopecks Int? // ручная цена админа в ₽ (приоритет над priceKopecks, переживает синхронизацию)
+  saleKopecks  Int? // акционная цена в ₽
+  isSale       Boolean     @default(false)
+  image        String? // главное изображение (путь на base.sstmk.ru)
+  images       String[] // дополнительные изображения
+  files        Json // [{cat, title, path}] — документация
+  description  String? // очищенный HTML основного описания
+  blocks       Json // HTML-блоки: advantages, application, appearance, installation, complectation...
+  modifications Json? // распарсенная таблица модификаций {columns, rows}
+  specs        Json // характеристики {label: value}
+  application  Json // флаги применения {home, server, medical, industry, heating, pump, machine, cod}
+  deliveryDays Int?
+  active       Boolean     @default(true)
+  modDate      DateTime?
+  createdAt    DateTime    @default(now())
+  orderItems   OrderItem[]
+
+  @@index([seriesId])
+  @@index([active, priceKopecks])
+  @@index([type])
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  number      String      @unique
+  userId      String?
+  user        User?       @relation(fields: [userId], references: [id])
+  type        OrderType
+  status      OrderStatus @default(NEW)
+  customerName String
+  phone       String
+  email       String
+  companyName String?
+  inn         String?
+  city        String?
+  address     String?
+  delivery    String // pickup | tc
+  payment     String // card | receipt | invoice
+  comment     String?
+  discountKopecks Int     @default(0)
+  totalKopecks    Int
+  createdAt   DateTime    @default(now())
+  items       OrderItem[]
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  code      String // slug товара (снапшот)
+  name      String // снапшот названия
+  qty       Int
+  priceKopecks Int
+
+  @@index([orderId])
+}
